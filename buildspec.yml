@@ -2,8 +2,10 @@ version: 0.2
 
 env:
   variables:
-    IMAGE_REPO_NAME: "asw_pipeline"
+    IMAGE_REPO_NAME: "aws_pipeline"
     IMAGE_TAG: "latest"
+    AWS_ACCOUNT_ID: 799634677741
+    AWS_DEFAULT_REGION: us-east-1
 
 
 phases:
@@ -23,8 +25,8 @@ phases:
       - echo $IMAGE_TAG
       - echo $AWS_ACCOUNT_ID
       - echo $AWS_DEFAULT_REGION
-#      - docker build -t $IMAGE_REPO_NAME:$IMAGE_TAG .
-#      - docker tag $IMAGE_REPO_NAME:$IMAGE_TAG $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG
+      - docker build -t $IMAGE_REPO_NAME:$IMAGE_TAG .
+      - docker tag $IMAGE_REPO_NAME:$IMAGE_TAG $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG
   post_build:
     commands:
       - echo Entered the post_build phase...
