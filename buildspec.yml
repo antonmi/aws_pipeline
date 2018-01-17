@@ -1,12 +1,5 @@
 version: 0.2
 
-env:
-  variables:
-    IMAGE_REPO_NAME: "aws_pipeline"
-    IMAGE_TAG: "latest"
-    AWS_ACCOUNT_ID: 799634677741
-    AWS_DEFAULT_REGION: us-east-1
-
 
 phases:
   install:
@@ -14,8 +7,6 @@ phases:
       - echo Entered the install phase...
       - nohup /usr/local/bin/dockerd --host=unix:///var/run/docker.sock --host=tcp://0.0.0.0:2375 --storage-driver=overlay&
       - timeout -t 15 sh -c "until docker info; do echo .; sleep 1; done"
-      - echo Logging in to Amazon ECR...
-      - $(aws ecr get-login --no-include-email --region $AWS_DEFAULT_REGION)
   pre_build:
     commands:
       - echo Entered the pre_build phase...
@@ -24,13 +15,6 @@ phases:
     commands:
       - echo Entered the build phase...
       - rspec -o test_results.json -f json
-      - echo Building Container
-      - echo $IMAGE_REPO_NAME
-      - echo $IMAGE_TAG
-      - echo $AWS_ACCOUNT_ID
-      - echo $AWS_DEFAULT_REGION
-      - docker build -t $IMAGE_REPO_NAME:$IMAGE_TAG .
-      - docker tag $IMAGE_REPO_NAME:$IMAGE_TAG $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG
   post_build:
     commands:
       - echo Entered the post_build phase...
